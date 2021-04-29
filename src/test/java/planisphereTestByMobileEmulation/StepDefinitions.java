@@ -103,8 +103,12 @@ public class StepDefinitions {
     @もし("^ナビゲータボタンをクリックする$")
     public void naviButtonClick() throws InterruptedException {
     	String selector = "span.navbar-toggler-icon";
+    	try {
+        	connector.btnClickAndWait_CSS(selector);
 
-    	connector.btnClickAndWait_CSS(selector);
+    	}catch(Exception NoSuchElementException) {
+//    		connector.destroySelenium();
+    	}
     }
 
     @もし("^HOME画面にもどる$")
@@ -422,27 +426,21 @@ public class StepDefinitions {
     public void breakFastSetting(String breakfast) throws InterruptedException {
     	String commandLocater = "breakfast";
 
-    	if(breakfast.equals("on")) {
-    		connector.btnClickAndWait_ID(commandLocater);
-    	}
+    	connector.checkBoxClick(commandLocater, breakfast);
     }
 
     @もし("昼からチェックインプランを\"([^\"]*)\"にして$")
     public void earlySetting(String earlyset) throws InterruptedException {
     	String commandLocater = "early-check-in";
 
-    	if(earlyset.equals("on")) {
-    		connector.btnClickAndWait_ID(commandLocater);
-    	}
+    	connector.checkBoxClick(commandLocater, earlyset);
     }
 
     @もし("お得な観光プランを\"([^\"]*)\"にして$")
     public void sightSeeingSetting(String seeing) throws InterruptedException {
     	String commandLocater = "sightseeing";
 
-    	if(seeing.equals("on")) {
-    		connector.btnClickAndWait_ID(commandLocater);
-    	}
+    	connector.checkBoxClick(commandLocater, seeing);
     }
 
     @もし("^氏名を\"([^\"]*)\"として$")
@@ -557,7 +555,7 @@ public class StepDefinitions {
  * @throws InterruptedException */
     @もし("チェックボックス\"([^\"]*)\"をクリックする$")
     public void checkBox_click(String check) throws InterruptedException {
-    	connector.checkBoxClick(check);
+//    	connector.checkBoxClick(check);
     }
 
 /** ドロップダウンメニュー */
@@ -671,12 +669,17 @@ public class StepDefinitions {
     public void testPrice(String price) {
     	String selector = "total-bill";
 
-    	try {
+        try
+        {
         	assertTrue(connector.testPrice(selector, Integer.valueOf(price)));
+        }catch(Exception AssertionError) {
+//        	System.out.println("合計金額エラー\n");
+//        	connector.closeChild();
+        	connector.setParent();
+//        	AssertionError.initCause(null);
+        }
 
-    	}catch(Exception e) {
-    		System.out.println("合計料金エラー");
-    	}
+
     }
 
     @ならば("部屋タイプは\"([^\"]*)\"となり$")
@@ -753,7 +756,7 @@ public class StepDefinitions {
 
     	try {
         	assertTrue(connector.testTerm(selector, termValue + termValueWeekEnd));
-    	}catch(Exception e) {
+    	}catch(Exception AssertionError) {
     		System.out.println(connector.dateFrom);
     		System.out.println(connector.dateTo);
     		connector.destroySelenium();
