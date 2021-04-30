@@ -19,6 +19,15 @@ public class StepDefinitions {
     private int termValueWeekEnd;
     private String comment144 = "123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC123456789ABC12345678";
 
+    private static String mobileMode;
+    private static int mobileWidth;
+    private static int mobileHeight;
+    private static double mobilePixel;
+    private static String mobileBrowserType;
+    private static String mobileUrl;
+    private static String id;
+    private static String passwd;
+
 //    public void WebSteps(WebConnector connector) {
 //        this.connector = connector;
 //    }
@@ -34,6 +43,7 @@ public class StepDefinitions {
 	@前提("^Webドライバは\"([^\"]*)\"を選択する$")
     public void select_webdriver(String browserType) throws InterruptedException, MalformedURLException {
 //		System.out.println(browserType);
+		mobileBrowserType = browserType;
 		connector.selectWebDriver(browserType);
     }
 
@@ -44,6 +54,7 @@ public class StepDefinitions {
  */
     @前提("^ページ\"([^\"]*)\"を表示する$")
     public void display_url(String url) throws InterruptedException {
+    	mobileUrl = url;
         connector.openAndWait(url);
     }
 
@@ -67,6 +78,7 @@ public class StepDefinitions {
     	int width = 0;
     	int height = 0;
     	double pixelratio = 0;
+    	mobileMode = mobile;
 
     	switch(mobile) {
     	case("Nexus 5X"):
@@ -87,6 +99,10 @@ public class StepDefinitions {
     	default:
 
     	}
+    	mobileWidth = width;
+    	mobileHeight = height;
+    	mobilePixel = pixelratio;
+
     	connector.setMobileEmulator(mobile, width, height, pixelratio);
     }
 
@@ -486,6 +502,7 @@ public class StepDefinitions {
     public void mailSetting(String email) {
     	String selector = "email";
 
+    	id = email;
     	connector.inputAndWait(selector, email);
     }
 
@@ -493,6 +510,7 @@ public class StepDefinitions {
     public void passSetting(String pass) {
     	String selector = "password";
 
+    	passwd = pass;
     	connector.inputAndWait(selector, pass);
     }
 
@@ -666,19 +684,49 @@ public class StepDefinitions {
     }
 
     @ならば("合計金額は\"([^\"]*)\"となり$")
-    public void testPrice(String price) {
+    public void testPrice(String price) throws MalformedURLException, InterruptedException {
     	String selector = "total-bill";
+    	boolean res;
 
-        try
-        {
-        	assertTrue(connector.testPrice(selector, Integer.valueOf(price)));
-        }catch(Exception AssertionError) {
+        res = connector.testPrice(selector, Integer.valueOf(price));
+        if(res == true) {
+        	assertTrue(res);
+        }else {
+        	connector.destroySelenium();
+        	Thread.sleep(2000);
+        	connector.rebootBrowser(mobileMode, mobileWidth, mobileHeight, mobilePixel,mobileBrowserType,mobileUrl);
+//        	connector.setMobileEmulator(mobileMode, mobileWidth, mobileHeight, mobilePixel);
+//        	connector.selectWebDriver(mobileBrowserType);
+//        	connector.openAndWait(mobileUrl);
+        	if(mobileMode.equals("iPad Mini")) {
+
+        	}else {
+            	connector.btnClickAndWait_CSS("span.navbar-toggler-icon");
+        	}
+        	if(id != null) {
+        		connector.linkClickAndWait("ログイン");
+        		Thread.sleep(1000);
+        		selector = "email";
+        		connector.inputAndWait(selector, id);
+        		selector = "password";
+        		connector.inputAndWait(selector, passwd);
+            	selector = "login-button";
+            	connector.btnClickAndWait_ID(selector);
+            	if(mobileMode.equals("iPad Mini")) {
+
+            	}else {
+                	connector.btnClickAndWait_CSS("span.navbar-toggler-icon");
+            	}
+        	}
+        	Thread.sleep(1000);
+        	connector.linkClickAndWait("宿泊予約");
+        	assertTrue(res);
+        }
+        	Thread.sleep(1000);
 //        	System.out.println("合計金額エラー\n");
 //        	connector.closeChild();
-        	connector.setParent();
+//        	connector.setParent();
 //        	AssertionError.initCause(null);
-        }
-
 
     }
 

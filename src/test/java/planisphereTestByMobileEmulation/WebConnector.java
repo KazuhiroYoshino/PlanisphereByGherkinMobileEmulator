@@ -192,6 +192,24 @@ public class WebConnector {
     }
 
 /**
+ * テスト失敗時のブラウザ再起動
+ * @param mobileUrl
+ * @param mobileBrowserType
+ * @param mobilePixel
+ * @param mobileHeight
+ * @param mobileWidth
+ * @param mobileMode
+ * @throws InterruptedException
+ * @throws MalformedURLException
+ */
+    public void rebootBrowser(String mobileMode, int mobileWidth, int mobileHeight, double mobilePixel, String mobileBrowserType, String mobileUrl) throws MalformedURLException, InterruptedException {
+    	setMobileEmulator(mobileMode, mobileWidth, mobileHeight, mobilePixel);
+    	selectWebDriver(mobileBrowserType);
+    	openAndWait(mobileUrl);
+
+    }
+
+/**
  * 使用言語対応
  */
     public void setLangEnglish() {
