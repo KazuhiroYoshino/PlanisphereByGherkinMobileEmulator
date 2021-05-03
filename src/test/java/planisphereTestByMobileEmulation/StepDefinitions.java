@@ -695,9 +695,6 @@ public class StepDefinitions {
         	connector.destroySelenium();
         	Thread.sleep(2000);
         	connector.rebootBrowser(mobileMode, mobileWidth, mobileHeight, mobilePixel,mobileBrowserType,mobileUrl);
-//        	connector.setMobileEmulator(mobileMode, mobileWidth, mobileHeight, mobilePixel);
-//        	connector.selectWebDriver(mobileBrowserType);
-//        	connector.openAndWait(mobileUrl);
         	if(mobileMode.equals("iPad Mini")) {
 
         	}else {
