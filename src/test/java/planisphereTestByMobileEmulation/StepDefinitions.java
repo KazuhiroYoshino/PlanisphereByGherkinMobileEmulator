@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import cucumber.api.java.ja.かつ;
 import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
@@ -109,6 +111,25 @@ public class StepDefinitions {
     @ならば("画面更新$")
     public void refresh() throws InterruptedException {
     	connector.refresh();
+    }
+
+    @もし("^デバイスを\"([^\"]*)\"にする$")
+    public void deviceLandscape(String rotation) {
+    	String deviceOrientation = "landscape";
+
+    	if(rotation.equals("横向き")) {
+    		deviceOrientation = "landscape";
+    	}
+    	if(rotation.equals("縦向き")) {
+    		deviceOrientation = "portrait";
+    	}
+    	connector.setDeviceRotation(deviceOrientation);
+    }
+
+    @もし("^デバイスを縦向きにする$")
+    public void devicePortrait() {
+    	DesiredCapabilities caps = new DesiredCapabilities();
+    	caps.setCapability("deviceOrientation", "portrait");
     }
 
     @もし("\"([^\"]*)\"で指定できるカレンダー表示を消して")

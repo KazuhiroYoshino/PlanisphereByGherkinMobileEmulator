@@ -27,6 +27,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -234,14 +235,31 @@ public class WebConnector {
     	Map<String, Object> mobileEmulation = new HashMap<>();
     	Map<String, Object> deviceMetrics = new HashMap<>();
 
-    	deviceMetrics.put("width", width);
-    	deviceMetrics.put("height", height);
-    	deviceMetrics.put("pixelRatio", pixel);
-    	mobileEmulation.put("deviceMetrics", deviceMetrics);
-//    	mobileEmulation.put("deviceName", mobile);
-    	mobileEmulation.put("userAgent", "Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-    	options.setExperimentalOption("mobileEmulation", mobileEmulation);
 //    	options.addArguments("--enable-web-app-frame");
+
+//    	deviceMetrics.put("width", width);
+//    	deviceMetrics.put("height", height);
+//    	deviceMetrics.put("pixelRatio", pixel);
+//    	mobileEmulation.put("deviceMetrics", deviceMetrics);
+
+    		mobileEmulation.put("deviceName", mobile);
+//    	mobileEmulation.put("userAgent", "Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+
+    		options.setExperimentalOption("mobileEmulation", mobileEmulation);
+    }
+
+/**
+ *
+ */
+    public void setDeviceRotation(String deviceOrientation) {
+    	DesiredCapabilities caps = new DesiredCapabilities();
+
+    	if(deviceOrientation.equals("landscape")) {
+    		caps.setCapability("deviceOrientation", "landscape");
+    	}
+    	if(deviceOrientation.equals("portarait")) {
+    		caps.setCapability("deviceOrientation", "portrait");
+    	}
     }
 
 /**
