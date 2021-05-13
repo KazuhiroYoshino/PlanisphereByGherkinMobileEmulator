@@ -27,5 +27,4 @@
 * iPhone X
 * iPad
 * iPad Pro
-* Sirface Duo
 ### AppiumとAndroidEmulatorのように時々デバイスを回転させたりはできないので、向きは固定とする。
