@@ -27,4 +27,6 @@
 * iPhone X
 * iPad（横向き）
 * iPad Pro（横向き）
+https://chromium.googlesource.com/chromium/src/+/167a7f5e03f8b9bd297d2663ec35affa0edd5076/third_party/WebKit/Source/devtools/front_end/emulated_devices/module.json
+の画面サイズを参照
 ### AppiumとAndroidEmulatorのように時々デバイスを回転させたりはできないので、向きは固定とする。
