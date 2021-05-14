@@ -28,6 +28,13 @@ public class StepDefinitions {
     private static String id;
     private static String passwd;
 
+/**
+ * 会員登録済みユーザーは、マイページから氏名と電話番号を確認できる
+ * ただし、電話番号は任意
+ */
+    private static String memberName;
+    private static String memberTel;
+    private static String memberMail;
 //    public void WebSteps(WebConnector connector) {
 //        this.connector = connector;
 //    }
@@ -131,8 +138,8 @@ public class StepDefinitions {
     		break;
     	case("Nexus7"):
     		mobileType = "Nexus 7";
-    		width = 960;
-    		height = 600;
+    		width = 6000;
+    		height = 960;
     		pixelratio = 2;
     		break;
     	case("Pixel2"):
@@ -234,7 +241,7 @@ public class StepDefinitions {
     	default:
 
     	}
-    	mobileMode = mobileType;
+    	mobileMode = mobile;
     	mobileWidth = width;
     	mobileHeight = height;
     	mobilePixel = pixelratio;
@@ -445,6 +452,26 @@ public class StepDefinitions {
     	connector.cssButtonClickAndPopUp(commandLocater);
     }
 
+/**
+ * 画面から取得系
+ * @throws InterruptedException
+ */
+        @かつ("^メールアドレスと名前と電話番号を取得する$")
+        public void getMemberInfo() throws InterruptedException {
+        	String selector;
+
+        	selector = "username";
+        	memberName = connector.getString(selector);
+
+        	selector = "email";
+        	memberMail = connector.getString(selector);
+
+        	selector = "tel";
+        	memberTel = connector.getString(selector);
+        	if(memberTel.equals("未登録")) {
+        		memberTel = null;
+        	}
+        }
 
 /** 入力系 */
 
@@ -1017,6 +1044,9 @@ public class StepDefinitions {
     public void testUsername(String username) throws InterruptedException {
     	String selector = "username";
 
+    	if(username.length() == 0) {
+    		username = connector.username;
+    	}
     	username = username + "様";
     	assertTrue(connector.testText(selector, username));
     }
@@ -1033,10 +1063,16 @@ public class StepDefinitions {
     		assertTrue(connector.testText(selector, contactText));
     		break;
     	case("電話でのご連絡"):
+    		if(telText.length() == 0) {
+    			telText = connector.tel;
+    		}
     		contactText = "電話" + "：" + telText;
 			assertTrue(connector.testText(selector, contactText));
     		break;
     	case("メールでのご連絡"):
+    		if(emailText.length() == 0) {
+    			emailText = connector.email;
+    		}
     		contactText = "メール" + "：" + emailText;
 			assertTrue(connector.testText(selector, contactText));
     		break;
