@@ -2,7 +2,7 @@
 ### Chrome Mobile Emulatorを用いたe2eテスト
 ### AndroidEmulatorで用意できないデバイスは、ChromeEmulatorでテストしたい。
 ### 確認したEmulatorは、
-* BlackBerry S370
+* BlackBerry Z30
 * Blackberry PlayBook（横向き）
 * Kindle Fire HDX（横向き）
 * Laptop with HiDPI screen（横向き）
@@ -15,7 +15,7 @@
 * Nexus 5X
 * Nexus 6
 * Nexus 6P
-* Nexus 7（横向き）
+* Nexus 7
 * Nokia N9
 * iPad Mini（横向き）
 * Galaxy S5
