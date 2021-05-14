@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import cucumber.api.java.ja.かつ;
 import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
@@ -30,6 +28,13 @@ public class StepDefinitions {
     private static String id;
     private static String passwd;
 
+/**
+ * 会員登録済みユーザーは、マイページから氏名と電話番号を確認できる
+ * ただし、電話番号は任意
+ */
+    private static String memberName;
+    private static String memberTel;
+    private static String memberMail;
 //    public void WebSteps(WebConnector connector) {
 //        this.connector = connector;
 //    }
@@ -77,59 +82,176 @@ public class StepDefinitions {
 
     @もし("^ブラウザをMobile\"([^\"]*)\"モードで開く$")
     public void mobileMode(String mobile) {
+    	String mobileType = null;
     	int width = 0;
     	int height = 0;
     	double pixelratio = 0;
-    	mobileMode = mobile;
 
     	switch(mobile) {
-    	case("Nexus 5X"):
+    	case("BlackBerryZ30"):
+    		mobileType = "BlackBerry Z30";
+    		width = 360;
+    		height = 640;
+    		pixelratio = 2;
+    		break;
+    	case("BlackBerryPlayBook"):
+    		mobileType = "Blackberry PlayBook";
+    		width = 1024;
+    		height = 600;
+    		pixelratio = 1;
+    		break;
+    	case("Nexus4"):
+    		mobileType = "Nexus 4";
+    		width = 384;
+    		height = 640;
+    		pixelratio = 2;
+    		break;
+    	case("Nexus5"):
+    		mobileType = "Nexus 5";
+    		width = 360;
+    		height = 640;
+    		pixelratio = 3;
+    		break;
+    	case("Nexus5X"):
+    		mobileType = "Nexus 5X";
     		width = 412;
     		height = 732;
     		pixelratio = 2.625;
     		break;
-    	case("iPad Mini"):
+    	case("Nexus6"):
+    		mobileType = "Nexus 6";
+    		width = 412;
+    		height = 732;
+    		pixelratio = 3.5;
+    		break;
+    	case("Nexus6P"):
+    		mobileType = "Nexus 6P";
+    		width = 412;
+    		height = 732;
+    		pixelratio = 3.5;
+    		break;
+    	case("Nexus10"):
+    		mobileType = "Nexus 10";
+    		width = 1280;
+    		height = 800;
+    		pixelratio = 2;
+    		break;
+    	case("Nexus7"):
+    		mobileType = "Nexus 7";
+    		width = 6000;
+    		height = 960;
+    		pixelratio = 2;
+    		break;
+    	case("Pixel2"):
+    		mobileType = "Pixel 2";
+    		width = 411;
+    		height = 731;
+    		pixelratio = 2.625;
+    		break;
+    	case("Pixel2_XL"):
+    		mobileType = "Pixel 2 XL";
+    		width = 411;
+    		height = 823;
+    		pixelratio = 3.5;
+    		break;
+    	case("NokiaN9"):
+    		mobileType = "Nokia N9";
+    		width = 480;
+    		height = 854;
+    		pixelratio = 1;
+    		break;
+    	case("MicrosoftLumia950"):
+    		mobileType = "Microsoft Lumia 950";
+    		width = 360;
+    		height = 640;
+    		pixelratio = 4;
+    		break;
+    	case("GalaxyS5"):
+    		mobileType = "Galaxy S5";
+    		width = 360;
+    		height = 640;
+    		pixelratio = 3;
+    		break;
+    	case("KindleFireHDX"):
+    		mobileType = "Kindle Fire HDX";
+    		width = 1280;
+    		height = 800;
+    		pixelratio = 2;
+    		break;
+    	case("Laptoptouch"):
+    		mobileType = "Laptop with touch";
+    		width = 1280;
+    		height = 950;
+    		pixelratio = 1;
+    		break;
+    	case("LaptopHiDPI"):
+    		mobileType = "Laptop with HiDPI screen";
+    		width = 1440;
+    		height = 900;
+    		pixelratio = 2;
+    		break;
+    	case("MotoG4"):
+    		mobileType = "Moto G4";
+    		width = 360;
+    		height = 640;
+    		pixelratio = 3;
+    		break;
+    	case("iPad_Mini"):
+    		mobileType = "iPad Mini";
     		width = 1024;
     		height = 768;
     		pixelratio = 2;
     		break;
-    	case("iPhone X"):
-    		width = 812;
-    		height = 375;
+    	case("iPad"):
+    		mobileType = "iPad";
+    		width = 1024;
+    		height = 768;
+    		pixelratio = 2;
+    		break;
+    	case("iPad_PRO"):
+    		mobileType = "iPad PRO";
+    		width = 1366;
+    		height = 1024;
+    		pixelratio = 2;
+    		break;
+    	case("iPhone_5"):
+    		mobileType = "iPhone 5";
+    		width = 320;
+    		height = 568;
+    		pixelratio = 2;
+    		break;
+    	case("iPhone_678"):
+    		mobileType = "iPhone 6/7/8";
+    		width = 375;
+    		height = 667;
+    		pixelratio = 2;
+    		break;
+    	case("iPhone_678_PLUS"):
+    		mobileType = "iPhone 6/7/8 Plus";
+    		width = 414;
+    		height = 736;
+    		pixelratio = 3;
+    		break;
+    	case("iPhone_X"):
+    		mobileType = "iPhone X";
+    		width = 375;
+    		height = 812;
     		pixelratio = 3;
     		break;
     	default:
 
     	}
+    	mobileMode = mobile;
     	mobileWidth = width;
     	mobileHeight = height;
     	mobilePixel = pixelratio;
 
-    	connector.setMobileEmulator(mobile, width, height, pixelratio);
+    	connector.setMobileEmulator(mobileType, width, height, pixelratio);
     }
 
     @ならば("画面更新$")
     public void refresh() throws InterruptedException {
     	connector.refresh();
-    }
-
-    @もし("^デバイスを\"([^\"]*)\"にする$")
-    public void deviceLandscape(String rotation) {
-    	String deviceOrientation = "landscape";
-
-    	if(rotation.equals("横向き")) {
-    		deviceOrientation = "landscape";
-    	}
-    	if(rotation.equals("縦向き")) {
-    		deviceOrientation = "portrait";
-    	}
-    	connector.setDeviceRotation(deviceOrientation);
-    }
-
-    @もし("^デバイスを縦向きにする$")
-    public void devicePortrait() {
-    	DesiredCapabilities caps = new DesiredCapabilities();
-    	caps.setCapability("deviceOrientation", "portrait");
     }
 
     @もし("\"([^\"]*)\"で指定できるカレンダー表示を消して")
@@ -330,6 +452,26 @@ public class StepDefinitions {
     	connector.cssButtonClickAndPopUp(commandLocater);
     }
 
+/**
+ * 画面から取得系
+ * @throws InterruptedException
+ */
+        @かつ("^メールアドレスと名前と電話番号を取得する$")
+        public void getMemberInfo() throws InterruptedException {
+        	String selector;
+
+        	selector = "username";
+        	memberName = connector.getString(selector);
+
+        	selector = "email";
+        	memberMail = connector.getString(selector);
+
+        	selector = "tel";
+        	memberTel = connector.getString(selector);
+        	if(memberTel.equals("未登録")) {
+        		memberTel = null;
+        	}
+        }
 
 /** 入力系 */
 
@@ -902,6 +1044,9 @@ public class StepDefinitions {
     public void testUsername(String username) throws InterruptedException {
     	String selector = "username";
 
+    	if(username.length() == 0) {
+    		username = connector.username;
+    	}
     	username = username + "様";
     	assertTrue(connector.testText(selector, username));
     }
@@ -918,10 +1063,16 @@ public class StepDefinitions {
     		assertTrue(connector.testText(selector, contactText));
     		break;
     	case("電話でのご連絡"):
+    		if(telText.length() == 0) {
+    			telText = connector.tel;
+    		}
     		contactText = "電話" + "：" + telText;
 			assertTrue(connector.testText(selector, contactText));
     		break;
     	case("メールでのご連絡"):
+    		if(emailText.length() == 0) {
+    			emailText = connector.email;
+    		}
     		contactText = "メール" + "：" + emailText;
 			assertTrue(connector.testText(selector, contactText));
     		break;
