@@ -67,14 +67,13 @@ public class WebConnector {
 
 	public static Date dt;
 
-	public String testDate;
-	public int weekEnd;
+//	public String testDate;
+//	public int weekEnd;
 	public String dateFrom;
 	public String dateTo;
-	public int priceData;
-
-	public int termValue;
-	public int termValueWeekEnd;
+//	public int priceData;
+//	public int termValue;
+//	public int termValueWeekEnd;
 
 	public int headCountValue;
 	public String breakFastValue;
@@ -132,11 +131,11 @@ public class WebConnector {
         this.setWebDriver();
     }
 
-    /**
-     * WebDriverインスタンスを生成する
-     * @throws InterruptedException
-     * @throws MalformedURLException
-     */
+/**
+ * WebDriverインスタンスを生成する
+ * @throws InterruptedException
+ * @throws MalformedURLException
+ */
     private void setWebDriver() throws InterruptedException, MalformedURLException {
         switch (this.DriverType) {
         case BROWSER_TYPE_IE: // IE
@@ -173,9 +172,9 @@ public class WebConnector {
         //暗黙wait
         //this.webDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
 
-		dt = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		testDate = sdf.format(dt);
+//		dt = new Date();
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//		testDate = sdf.format(dt);
 
         wait = new WebDriverWait(webDriver, 10);
 
@@ -191,7 +190,6 @@ public class WebConnector {
         webDriver.navigate().to(location);
         Thread.sleep(5000);
     }
-
 
 /**
  * Windowを最大化する
@@ -210,16 +208,15 @@ public class WebConnector {
 
 /**
  * テスト失敗時のブラウザ再起動
- * @param mobileUrl
- * @param mobileBrowserType
- * @param mobilePixel
- * @param mobileHeight
- * @param mobileWidth
- * @param mobileMode
- * @throws InterruptedException
- * @throws MalformedURLException
  */
-    public void rebootBrowser(String mobileMode, int mobileWidth, int mobileHeight, double mobilePixel, String mobileBrowserType, String mobileUrl) throws MalformedURLException, InterruptedException {
+    public void rebootBrowser(String mobileBrowserType, String mobileUrl) throws InterruptedException, MalformedURLException {
+
+    	selectWebDriver(mobileBrowserType);
+    	openAndWait(mobileUrl);
+
+    }
+
+    public void rebootBrowserMB(String mobileMode, int mobileWidth, int mobileHeight, double mobilePixel, String mobileBrowserType, String mobileUrl) throws MalformedURLException, InterruptedException {
     	setMobileEmulator(mobileMode, mobileWidth, mobileHeight, mobilePixel);
     	selectWebDriver(mobileBrowserType);
     	openAndWait(mobileUrl);
@@ -230,18 +227,11 @@ public class WebConnector {
  * 使用言語対応
  */
     public void setLangEnglish() {
-//        ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=en-GB");
-//      Map<String, Object> prefs = new HashMap<String, Object>();
-//      prefs.put("intl.accept_languages", "en-GB,en");
-//      options.setExperimentalOption("prefs", prefs);
-
     }
 
     public void setlangJapanese() {
-//        ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=ja-JP");
-
     }
 
 /**
@@ -330,7 +320,6 @@ public class WebConnector {
     public void setScreenShotPath(String path) {
         this.screenShotPath = path;
     }
-
 
     public void initSelenium() throws Exception {
     }
@@ -447,7 +436,7 @@ public class WebConnector {
                 WebElement element = webDriver.findElement(By.name(selector));
                 element.sendKeys(Keys.RETURN);
             } catch(Exception e) {
-                webDriver.quit();
+//                webDriver.quit();
             }
         }
 
@@ -461,7 +450,7 @@ public class WebConnector {
                     By.xpath("//input[@type=\"submit\" and @value=\"" + value + "\"]"));
                 element.click();
             } catch(Exception e) {
-                webDriver.quit();
+//                webDriver.quit();
             }
         }
 
@@ -480,7 +469,7 @@ public class WebConnector {
                     }
                 }
             } catch(Exception e) {
-                webDriver.quit();
+//                webDriver.quit();
             }
         }
 
@@ -504,7 +493,7 @@ public class WebConnector {
                     i++;
                 }
             } catch(Exception e) {
-                webDriver.quit();
+//                webDriver.quit();
             }
         }
 
@@ -563,7 +552,7 @@ public class WebConnector {
                 WebElement element = webDriver.findElement(By.linkText(text));
                 element.click();
             } catch(Exception e) {
-                webDriver.quit();
+//                webDriver.quit();
             }
         }
 
@@ -586,6 +575,112 @@ public class WebConnector {
             }
         }
 
+        /**
+         * spanタグをクリックする
+         * @param tagname "span"を期待
+         * @param text タグから検索したい文字列
+         */
+        public void spanClickAndWait(String tagname, String text) {
+            int i = 0;
+            try {
+                //tagnameの名前のエレメントを探す
+                List <WebElement>element = webDriver.findElements(By.tagName(tagname));
+                for(WebElement entity : element) {
+                    //エレメントのテキストが検索したい文字列と合致
+                    if(entity.getText().equals(text)) {
+                        entity.click(); //エレメントをクリックする
+                        break;
+                    }
+                }
+            } catch(Exception e) {
+                webDriver.quit();
+            }
+        }
+
+        /**
+         * aタグをクリックする
+         * @param text a タグのテキスト
+         * @throws InterruptedException
+         */
+        public void linkClickAndWait(String text) throws InterruptedException {
+    		WebElement elementPos = webDriver.findElement(By.partialLinkText(text));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(elementPos);
+    		actions.perform();
+    		Thread.sleep(500);
+
+    		WebElement element = webDriver.findElement(By.partialLinkText(text));
+    		wait.until(ExpectedConditions.elementToBeClickable(element));
+    		element.click();
+            Thread.sleep(500);
+        }
+
+    /**  チェックボックスをOnまたはOffにする
+     * @throws InterruptedException */
+        public void checkBoxClick(String commandLocater, String state) throws InterruptedException {
+    		WebElement elementPos = webDriver.findElement(By.id(commandLocater));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(elementPos);
+    		actions.perform();
+    		Thread.sleep(500);
+
+    		WebElement element = webDriver.findElement(By.id(commandLocater));
+    		wait.until(ExpectedConditions.elementToBeClickable(element));
+    		if(state.equals("on")) {
+    			if(element.isSelected() == false) {
+    				element.click();
+    			}
+    		}
+    		if(state.equals("off")) {
+    			if(element.isSelected() == true) {
+    				element.click();
+    			}
+    		}
+
+            Thread.sleep(500);
+        }
+
+    /**  ドロップダウンメニューから選択する
+     * @throws InterruptedException */
+        public void dropDownSelect(String commandLocater, String selText) throws InterruptedException {
+    		WebElement element = webDriver.findElement(By.id(commandLocater));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(element);
+    		actions.perform();
+    		Thread.sleep(1000);
+            Select output_Select = new Select(webDriver.findElement(By.id(commandLocater)));
+            output_Select.selectByVisibleText(selText);
+            Thread.sleep(500);
+
+        }
+
+    	public void btnClickAndWait_CSS(String commandLocater) throws InterruptedException {
+    		WebElement elementPos = webDriver.findElement(By.cssSelector(commandLocater));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(elementPos);
+    		actions.perform();
+    		Thread.sleep(500);
+
+    		WebElement element = webDriver.findElement(By.cssSelector(commandLocater));
+    		wait.until(ExpectedConditions.elementToBeClickable(element));
+    		element.click();
+            Thread.sleep(1000);
+    	}
+
+    	public void cssButtonClickAndPopUp(String commandLocater) throws InterruptedException {
+    		acceptNextAlert = true;
+
+    		WebElement exitButton = webDriver.findElement(By.cssSelector(commandLocater));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(exitButton);
+    		actions.perform();
+    		Thread.sleep(500);
+    		exitButton = webDriver.findElement(By.cssSelector(commandLocater));
+    		wait.until(ExpectedConditions.elementToBeClickable(exitButton));
+    		exitButton.click();
+    		Thread.sleep(500);
+    	}
+
 /**
  * 検証系
  */
@@ -596,6 +691,7 @@ public class WebConnector {
         	boolean testResult = false;
 
     		String priceText;
+    		int priceData;
 
 //    		int up25Price = 8750;
 //    		int normalPrice = 7000;
@@ -824,85 +920,6 @@ public class WebConnector {
     		return res;
     	}
 
-        /**
-         * spanタグをクリックする
-         * @param tagname "span"を期待
-         * @param text タグから検索したい文字列
-         */
-        public void spanClickAndWait(String tagname, String text) {
-            int i = 0;
-            try {
-                //tagnameの名前のエレメントを探す
-                List <WebElement>element = webDriver.findElements(By.tagName(tagname));
-                for(WebElement entity : element) {
-                    //エレメントのテキストが検索したい文字列と合致
-                    if(entity.getText().equals(text)) {
-                        entity.click(); //エレメントをクリックする
-                        break;
-                    }
-                }
-            } catch(Exception e) {
-                webDriver.quit();
-            }
-        }
-
-        /**
-         * aタグをクリックする
-         * @param text a タグのテキスト
-         * @throws InterruptedException
-         */
-        public void linkClickAndWait(String text) throws InterruptedException {
-    		WebElement elementPos = webDriver.findElement(By.partialLinkText(text));
-    		Actions actions = new Actions(webDriver);
-    		actions.moveToElement(elementPos);
-    		actions.perform();
-    		Thread.sleep(500);
-
-    		WebElement element = webDriver.findElement(By.partialLinkText(text));
-    		wait.until(ExpectedConditions.elementToBeClickable(element));
-    		element.click();
-            Thread.sleep(500);
-        }
-
-    /**  チェックボックスをOnまたはOffにする
-     * @throws InterruptedException */
-        public void checkBoxClick(String commandLocater, String state) throws InterruptedException {
-    		WebElement elementPos = webDriver.findElement(By.id(commandLocater));
-    		Actions actions = new Actions(webDriver);
-    		actions.moveToElement(elementPos);
-    		actions.perform();
-    		Thread.sleep(500);
-
-    		WebElement element = webDriver.findElement(By.id(commandLocater));
-    		wait.until(ExpectedConditions.elementToBeClickable(element));
-    		if(state.equals("on")) {
-    			if(element.isSelected() == false) {
-    				element.click();
-    			}
-    		}
-    		if(state.equals("off")) {
-    			if(element.isSelected() == true) {
-    				element.click();
-    			}
-    		}
-
-            Thread.sleep(500);
-        }
-
-    /**  ドロップダウンメニューから選択する
-     * @throws InterruptedException */
-        public void dropDownSelect(String commandLocater, String selText) throws InterruptedException {
-    		WebElement element = webDriver.findElement(By.id(commandLocater));
-    		Actions actions = new Actions(webDriver);
-    		actions.moveToElement(element);
-    		actions.perform();
-    		Thread.sleep(1000);
-            Select output_Select = new Select(webDriver.findElement(By.id(commandLocater)));
-            output_Select.selectByVisibleText(selText);
-            Thread.sleep(500);
-
-        }
-
         public void assertTable(String className, List expect) {
 
             WebElement table = webDriver.findElement(By.className(className));
@@ -921,33 +938,6 @@ public class WebConnector {
                 }
             }
         }
-
-    	public void btnClickAndWait_CSS(String commandLocater) throws InterruptedException {
-    		WebElement elementPos = webDriver.findElement(By.cssSelector(commandLocater));
-    		Actions actions = new Actions(webDriver);
-    		actions.moveToElement(elementPos);
-    		actions.perform();
-    		Thread.sleep(500);
-
-    		WebElement element = webDriver.findElement(By.cssSelector(commandLocater));
-    		wait.until(ExpectedConditions.elementToBeClickable(element));
-    		element.click();
-            Thread.sleep(1000);
-    	}
-
-    	public void cssButtonClickAndPopUp(String commandLocater) throws InterruptedException {
-    		acceptNextAlert = true;
-
-    		WebElement exitButton = webDriver.findElement(By.cssSelector(commandLocater));
-    		Actions actions = new Actions(webDriver);
-    		actions.moveToElement(exitButton);
-    		actions.perform();
-    		Thread.sleep(500);
-    		exitButton = webDriver.findElement(By.cssSelector(commandLocater));
-    		wait.until(ExpectedConditions.elementToBeClickable(exitButton));
-    		exitButton.click();
-    		Thread.sleep(500);
-    	}
 
     	public void birthdayInput(String commandLocater, String birthday) throws InterruptedException {
     		String[] inputText = {"//"};
@@ -1032,8 +1022,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1200,8 +1189,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1250,6 +1238,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1298,8 +1287,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1348,6 +1336,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1396,8 +1385,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1446,6 +1434,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1494,8 +1483,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1544,6 +1532,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1592,8 +1581,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1642,6 +1630,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
@@ -1690,8 +1679,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
-            inputDate.click();
-            Thread.sleep(500);
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(1000);
 //            reserveYear = reserveYear + "\n";
@@ -1740,6 +1728,7 @@ public class WebConnector {
 
             WebElement inputDate = webDriver.findElement(By.id(commandLocater));
             wait.until(ExpectedConditions.elementToBeClickable(inputDate));
+            inputDate.sendKeys(Keys.ENTER);
             inputDate.clear();
             Thread.sleep(500);
 //            reserveYear = reserveYear + "\n";
