@@ -254,6 +254,16 @@ public class StepDefinitions {
     	connector.refresh();
     }
 
+/**
+ * 画面下段に移動する
+ */
+    @もし("^画面下段に移動する$")
+    public void moveToLogo() {
+     	String selector = "/html/body/footer/div/p";
+
+       	connector.moveToElement(selector);
+    }
+
     @もし("\"([^\"]*)\"で指定できるカレンダー表示を消して")
     public void eraseCalendar(String name) throws InterruptedException {
     	connector.btnClickAndWait_X(name);
