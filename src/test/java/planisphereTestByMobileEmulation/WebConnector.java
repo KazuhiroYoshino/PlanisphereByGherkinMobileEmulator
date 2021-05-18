@@ -192,6 +192,31 @@ public class WebConnector {
     }
 
 /**
+ * 画面下方に移動する
+ * 微妙なところにクリックしたいエレメントが配置されることへの対応
+ */
+    public void moveToElement(String selector) {
+        try {
+            WebElement element = webDriver.findElement(By.id(selector));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(element);
+    		actions.perform();
+    		Thread.sleep(500);
+        } catch(Exception e) {
+        }
+        try {
+            WebElement element = webDriver.findElement(By.xpath(selector));
+    		Actions actions = new Actions(webDriver);
+    		actions.moveToElement(element);
+    		actions.perform();
+    		Thread.sleep(500);
+        } catch(Exception e) {
+//            webDriver.quit();
+        }
+
+    }
+
+/**
  * Windowを最大化する
  * ただし、ChromeDriver以外
  * @throws InterruptedException
@@ -531,13 +556,13 @@ public class WebConnector {
          */
         public void btnClickAndWait_X(String commandLocater) throws InterruptedException {
     		WebElement elementPos = webDriver.findElement(By.xpath(commandLocater));
+    		wait.until(ExpectedConditions.elementToBeClickable(elementPos));
     		Actions actions = new Actions(webDriver);
     		actions.moveToElement(elementPos);
     		actions.perform();
     		Thread.sleep(500);
-    		WebElement element = webDriver.findElement(By.xpath(commandLocater));
-    		wait.until(ExpectedConditions.elementToBeClickable(element));
-    		element.click();
+//    		WebElement element = webDriver.findElement(By.xpath(commandLocater));
+    		elementPos.click();
 
     		Thread.sleep(500);
         }
@@ -854,12 +879,12 @@ public class WebConnector {
         	boolean res;
 
         	WebElement element = webDriver.findElement(By.xpath(selector));
+        	wait.until(ExpectedConditions.visibilityOf(element));
     		Actions actions = new Actions(webDriver);
     		actions.moveToElement(element);
     		actions.perform();
     		Thread.sleep(500);
 
-        	wait.until(ExpectedConditions.visibilityOf(element));
         	resultText = element.getText();
         	if(resultText.equalsIgnoreCase(text)) {
         		res = true;
@@ -901,13 +926,16 @@ public class WebConnector {
     	}
 
     	public boolean checkContensList(String commandLocater, String planName, String hyouji) throws InterruptedException {
-    		String targetContent;
+    		String targetContent = null;
     		List<WebElement> contentsList = webDriver.findElements(By.className(commandLocater));
     		boolean res = false;
+    		Actions actions = new Actions(webDriver);
 
     		for(WebElement content : contentsList) {
-    			targetContent = content.getText();
     			if(targetContent.equals(planName)) {
+            		actions.moveToElement(content);
+            		actions.perform();
+            		Thread.sleep(500);
     				res = hyouji.contains("yes");
     			}else {
     				res= hyouji.contains("no");
